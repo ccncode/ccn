@@ -1,50 +1,53 @@
 #include <stdio.h>
 #include <string.h>
 
-void main()
+int main()
 {
     int i = 0, j = 0, len, lenh, lend;
     char sorc[50], stf[80] = {'\0'}, destf[50] = {'\0'};
     char header[] = "DLESTX", trailer[] = "DLEETX";
 
-    printf("\n\nEnter the Data in character\n");
-    gets(sorc);
+    printf("\nEnter the Data in characters:\n");
+    fgets(sorc, sizeof(sorc), stdin);
+
+    // Remove newline if present
+    sorc[strcspn(sorc, "\n")] = '\0';
 
     strcpy(stf, header);
     len = strlen(sorc);
     lenh = strlen(header);
     j = lenh;
 
-    // Character Stuffing
     for (i = 0; i < len; i++)
     {
-        if ((sorc[i] == 'D') && (sorc[i + 1] == 'L') && (sorc[i + 2] == 'E'))
+        if (sorc[i] == 'D' && sorc[i + 1] == 'L' && sorc[i + 2] == 'E')
         {
-            stf[j] = 'D';
-            stf[j + 1] = 'L';
-            stf[j + 2] = 'E';
-            j += 3;
+            stf[j++] = 'D';
+            stf[j++] = 'L';
+            stf[j++] = 'E';
         }
-        stf[j] = sorc[i];
-        j++;
+        stf[j++] = sorc[i];
     }
 
     strcat(stf, trailer);
-    printf("\n\nThe Stuffed Data is:\n%s", stf);
 
-    // Character De-stuffing
+    printf("\nStuffed Data:\n%s", stf);
+
     j = 0;
     lend = strlen(stf);
 
-    for (i = lenh; i < lend - lenh; i++)
+    for (i = lenh; i < lend - strlen(trailer); i++)
     {
-        if ((stf[i] == 'D') && (stf[i + 1] == 'L') && (stf[i + 2] == 'E'))
+        if (stf[i] == 'D' && stf[i + 1] == 'L' && stf[i + 2] == 'E')
         {
             i += 3;
         }
-        destf[j] = stf[i];
-        j++;
+        destf[j++] = stf[i];
     }
 
-    printf("\n\nThe Destuffed Data is:\n%s", destf);
+    destf[j] = '\0';
+
+    printf("\nDestuffed Data:\n%s\n", destf);
+
+    return 0;
 }
